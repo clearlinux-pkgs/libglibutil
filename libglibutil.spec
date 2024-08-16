@@ -7,14 +7,14 @@
 #
 Name     : libglibutil
 Version  : 1.0.79
-Release  : 1
+Release  : 2
 URL      : https://github.com/sailfishos/libglibutil/archive/refs/tags/1.0.79.tar.gz
 Source0  : https://github.com/sailfishos/libglibutil/archive/refs/tags/1.0.79.tar.gz
 Summary  : Library of glib utilities
 Group    : Development/Tools
 License  : BSD-3-Clause
+Requires: libglibutil-lib = %{version}-%{release}
 Requires: libglibutil-license = %{version}-%{release}
-Requires: libglibutil-plugins = %{version}-%{release}
 BuildRequires : glib-dev
 BuildRequires : pkgconfig(glib-2.0)
 # Suppress stripping binaries
@@ -24,20 +24,32 @@ BuildRequires : pkgconfig(glib-2.0)
 %description
 Provides glib utility functions and macros
 
+%package dev
+Summary: dev components for the libglibutil package.
+Group: Development
+Requires: libglibutil-lib = %{version}-%{release}
+Provides: libglibutil-devel = %{version}-%{release}
+Requires: libglibutil = %{version}-%{release}
+
+%description dev
+dev components for the libglibutil package.
+
+
+%package lib
+Summary: lib components for the libglibutil package.
+Group: Libraries
+Requires: libglibutil-license = %{version}-%{release}
+
+%description lib
+lib components for the libglibutil package.
+
+
 %package license
 Summary: license components for the libglibutil package.
 Group: Default
 
 %description license
 license components for the libglibutil package.
-
-
-%package plugins
-Summary: plugins components for the libglibutil package.
-Group: Default
-
-%description plugins
-plugins components for the libglibutil package.
 
 
 %prep
@@ -49,7 +61,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1723824620
+export SOURCE_DATE_EPOCH=1723825176
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -83,24 +95,46 @@ FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
-export SOURCE_DATE_EPOCH=1723824620
+export SOURCE_DATE_EPOCH=1723825176
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libglibutil
 cp %{_builddir}/libglibutil-%{version}/LICENSE %{buildroot}/usr/share/package-licenses/libglibutil/a2ba9bbffd3509f22cc76c439d77bd381ab49b83 || :
 cp %{_builddir}/libglibutil-%{version}/debian/copyright %{buildroot}/usr/share/package-licenses/libglibutil/a2ba9bbffd3509f22cc76c439d77bd381ab49b83 || :
 export GOAMD64=v2
 GOAMD64=v2
-%make_install
+%make_install LIBDIR=/usr/lib64 install-dev
 
 %files
 %defattr(-,root,root,-)
 
+%files dev
+%defattr(-,root,root,-)
+/usr/include/gutil/gutil_datapack.h
+/usr/include/gutil/gutil_history.h
+/usr/include/gutil/gutil_idlepool.h
+/usr/include/gutil/gutil_idlequeue.h
+/usr/include/gutil/gutil_inotify.h
+/usr/include/gutil/gutil_intarray.h
+/usr/include/gutil/gutil_ints.h
+/usr/include/gutil/gutil_log.h
+/usr/include/gutil/gutil_macros.h
+/usr/include/gutil/gutil_misc.h
+/usr/include/gutil/gutil_objv.h
+/usr/include/gutil/gutil_ring.h
+/usr/include/gutil/gutil_strv.h
+/usr/include/gutil/gutil_timenotify.h
+/usr/include/gutil/gutil_types.h
+/usr/include/gutil/gutil_version.h
+/usr/include/gutil/gutil_weakref.h
+/usr/lib64/libglibutil.so
+/usr/lib64/pkgconfig/libglibutil.pc
+
+%files lib
+%defattr(-,root,root,-)
+/usr/lib64/libglibutil.so.1
+/usr/lib64/libglibutil.so.1.0
+/usr/lib64/libglibutil.so.1.0.79
+
 %files license
 %defattr(0644,root,root,0755)
 /usr/share/package-licenses/libglibutil/a2ba9bbffd3509f22cc76c439d77bd381ab49b83
-
-%files plugins
-%defattr(-,root,root,-)
-/usr/lib/libglibutil.so.1
-/usr/lib/libglibutil.so.1.0
-/usr/lib/libglibutil.so.1.0.79
